@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/Yoosephh/projeto14-mywallet-back/issues"
   },
-  "homepage": "https://github.com/Yoosephh/projeto14-mywallet-back#readme"
+  "homepage": "https://github.com/Yoosephh/projeto14-mywallet-back#readme",
+  "dependencies": {
+    "cors": "^2.8.5"
+  }
 }
