@@ -1,0 +1,19 @@
+{
+  "name": "my-wallet-back",
+  "version": "1.0.0",
+  "description": "API para my-wallet",
+  "main": "./src/app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/Yoosephh/projeto14-mywallet-back.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Yoosephh/projeto14-mywallet-back/issues"
+  },
+  "homepage": "https://github.com/Yoosephh/projeto14-mywallet-back#readme"
+}
