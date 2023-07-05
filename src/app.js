@@ -33,10 +33,11 @@ try {
 } catch (err) {
   console.log(err.message);
 }
-const usersCollection = db.collection("users")
+
 
 app.post("/cadastro", async(req,res)=> {
   try{
+    const usersCollection = db.collection("users")
     const {name, email, password} = req.body
 
     if(await usersCollection.findOne({ email })) return res.status(409).send("Email já cadastrado!")
