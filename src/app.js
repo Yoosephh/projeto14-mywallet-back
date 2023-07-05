@@ -44,7 +44,7 @@ app.post("/cadastro", async(req,res)=> {
     const userSchema = joi.object({
       name: joi.string().required(),
       email: joi.string().email().required(),
-      password: joi.min(3).required()
+      password: joi.string().pattern(new RegExp('^[a-zA-Z0-9]{3,30}$')).required()
     });
 
     const validation = userSchema.validate({name, email, password}, { abortEarly: false });
@@ -59,6 +59,6 @@ app.post("/cadastro", async(req,res)=> {
 
     res.status(201).send("Cadastro realizado com sucesso! :)")
   } catch(err) {
-    console.log(err.message)
+    res.send(err)
   }
 })
