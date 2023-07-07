@@ -1,38 +1,14 @@
 import express from "express";
 import cors from "cors";
-import dotenv from "dotenv";
-import { MongoClient } from "mongodb";
-import dayjs from "dayjs";
-import { signup, signin } from "./controllers/auth.controllers.js";
+import authRouter from "./routes/auth.routes.js"
 
-const app = express();
 const PORT = 5000;
+const app = express();
+
 app.use(cors());
 app.use(express.json());
-dotenv.config();
+app.use(authRouter)
 
-const mongoClient = new MongoClient(process.env.DATABASE_URL);
-
-export let db;
-
-try {
-  mongoClient.connect((err) => {
-    if (err) {
-      console.error(err);
-      return;
-    }
-  });
-
-  db = mongoClient.db();
-  console.log(`${dayjs().format("HH:mm:ss")}: Conectado ao MongoDB`);
-
-  app.listen(PORT, () => {
-    console.log(`Servidor rodando na porta ${PORT}, juntamente ao Mongo!`);
-  });
-} catch (err) {
-  console.log(err.message);
-}
-
-app.post("/cadastro", signup)
-
-app.post("/", signin)
+app.listen(PORT, () => {
+  console.log(`Servidor rodando na porta ${PORT}, juntamente ao Mongo!`);
+});

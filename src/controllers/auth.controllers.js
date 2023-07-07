@@ -1,13 +1,12 @@
 import joi from "joi";
 import bcrypt from "bcrypt"
-import { db } from "../app.js";
+import { db } from "../database/database.connections.js";
 import {v4 as uuid} from "uuid"
 
 
-
+const usersCollection = db.collection("users")
 export async function signup(req,res) {
   try{
-    const usersCollection = db.collection("users")
     const {name, email, password} = req.body
 
     if(await usersCollection.findOne({ email })) return res.status(409).send("Email já cadastrado!")
@@ -39,7 +38,6 @@ export async function signup(req,res) {
 
 export async function signin(req,res) {
   try{
-    const usersCollection = db.collection("users")
     const {email, password} = req.body
 
     const userSchema = joi.object({
