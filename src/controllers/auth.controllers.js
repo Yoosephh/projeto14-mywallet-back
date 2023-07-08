@@ -28,7 +28,7 @@ export async function signup(req,res) {
 
     await usersCollection.insertOne({name, email, password: criptedPassword})
 
-    res.status(201).send("Cadastro realizado com sucesso! :)")
+    res.status(201).send({message:"Cadastro realizado com sucesso! :)", name, email})
 
   } catch(err) {
     res.status(400).send(err)
