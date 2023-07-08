@@ -28,7 +28,7 @@ export async function signup(req,res) {
 
     await usersCollection.insertOne({name, email, password: criptedPassword})
 
-    res.status(201).send({message:"Cadastro realizado com sucesso! :)", name, email})
+    res.status(201).send("Cadastro realizado com sucesso! :)")
 
   } catch(err) {
     res.status(400).send(err)
@@ -57,13 +57,13 @@ export async function signin(req,res) {
     const user = await usersCollection.findOne({email})
 
     if (user && !bcrypt.compareSync(password, user.password)) {
-      return res.status(401).send("Email ou senha incorretos!")
+      return res.status(401).send({message:"Email ou senha incorretos!", user})
     }
 
     if(user && bcrypt.compareSync(password, user.password)){
       const token = uuid()
       await db.collection("sessions").insertOne({userId: user._id,token})
-        res.status(200).send(token);
+        res.status(200).send({name:user.name, token});
     }
 
   } catch(err) {
