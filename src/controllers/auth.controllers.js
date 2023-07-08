@@ -61,8 +61,11 @@ export async function signin(req,res) {
     }
 
     if(user && bcrypt.compareSync(password, user.password)){
-      const token = uuid()
-      await db.collection("sessions").insertOne({userId: user._id,token})
+      const token = uuid();
+      const usuarios = await usersCollection.find({})
+      console.log(usuarios)
+      await db.collection("sessions").findOneAndDelete({userId:user._id});
+      await db.collection("sessions").insertOne({userId: user._id,token});
         res.status(200).send({name:user.name, token});
     }
 
