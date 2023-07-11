@@ -10,7 +10,7 @@ export async function signup(req,res) {
   try{
     const {name, email, password} = req.body
 
-    if(await usersCollection.findOne({ email })) return res.status(409).send("Email já cadastrado!")
+    if(await db.collection("users").findOne({ email })) return res.status(409).send("Email já cadastrado!")
 
     const userSchema = joi.object({
       name: joi.string().required().min(3),
@@ -27,7 +27,7 @@ export async function signup(req,res) {
 
     const criptedPassword = bcrypt.hashSync(password, 10);
 
-    await usersCollection.insertOne({name, email, password: criptedPassword})
+    await db.collection("users").insertOne({name, email, password: criptedPassword})
 
     res.status(201).send("Cadastro realizado com sucesso! :)")
 
@@ -53,10 +53,12 @@ export async function signin(req,res) {
       return res.status(422).send(errors);
     }
 
-    if(!await usersCollection.findOne({ email })) return res.status(404).send("Email não cadastrado!")
+    if(!await db.collection("users").findOne({ email })) return res.status(404).send("Email não cadastrado!")
     
-    const user = await usersCollection.findOne({email})
+    const user = await db.collection("users").findOne({email})
+    
     res.locals.userId = user._id
+    
     if (user && !bcrypt.compareSync(password, user.password)) {
       return res.status(401).send({message:"Email ou senha incorretos!", user})
     }
@@ -64,9 +66,7 @@ export async function signin(req,res) {
     if(user && bcrypt.compareSync(password, user.password)){
       const token = uuid();
       
-      const userId = res.locals.userId
-      await userSessions.findOneAndDelete({userId});
-      await userSessions.insertOne({userId, token});
+      await db.collection("sessions").insertOne({userId:user._id, token});
         res.status(200).send({name:user.name, token});
     }
 

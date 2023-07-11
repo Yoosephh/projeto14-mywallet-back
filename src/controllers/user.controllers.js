@@ -1,37 +1,36 @@
 import { db } from "../database/database.connections.js";
 
 
-const userSessions =  db.collection("sessions")
-const usuaryTransactions = db.collection("transactions")
+
 export async function userTransactions(req,res){
   try{
-    const userId = res.locals.userId
-    const {authorization} = req.headers
-    const token = authorization?.replace('Bearer ', '');
-    if(!token) return res.sendStatus(401);
+    const { userId } = res.locals.session
+    console.log(userId)
 
-    const session = await userSessions.findOne({ token });
-    if (!session) return res.sendStatus(401);
+    const session = await db.collection("sessions").find({ userId });
+    if (!session) console.log("deu ruim aqui");
 
-    const transactions = usuaryTransactions.find({userId}).sort({ $natural: -1 }).toArray();
+    const transactions = await db.collection("transactions").find({userId}).sort({ $natural: -1 }).toArray();
 
     res.status(200).send(transactions)
   } catch(err) {
+
     console.log(err.message)
+
   }
 }
 
-
 export async function newTransaction(req,res){
   try{
-    const {authorization} = req.headers
-    const token = authorization?.replace('Bearer ', '');
-    if(!token) return res.sendStatus(401);
+    const {userId} = res.locals.session
+
+    console.log(userId)
+
     const {value, description, type} = req.body
-    await usuaryTransactions.insertOne({time: Date.now(), type, value, description, userId})
+    await db.collection("transactions").insertOne({time: Date.now(), type, value:Number(value.replace(",", ".")), description, userId})
 
     res.sendStatus(201)
   } catch (err){
-    console.log(err.message)
+    console.log(err)
   }
 }
