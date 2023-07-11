@@ -56,15 +56,15 @@ export async function signin(req,res) {
     if(!await usersCollection.findOne({ email })) return res.status(404).send("Email não cadastrado!")
     
     const user = await usersCollection.findOne({email})
-
+    res.locals.userId = user._id
     if (user && !bcrypt.compareSync(password, user.password)) {
       return res.status(401).send({message:"Email ou senha incorretos!", user})
     }
 
     if(user && bcrypt.compareSync(password, user.password)){
       const token = uuid();
-      res.locals.userId = user._id
-
+      
+      const userId = res.locals.userId
       await userSessions.findOneAndDelete({userId});
       await userSessions.insertOne({userId, token});
         res.status(200).send({name:user.name, token});
