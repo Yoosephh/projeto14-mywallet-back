@@ -43,7 +43,8 @@ export async function signin(req,res) {
 
     const userSchema = joi.object({
       email: joi.string().email().required(),
-      password: joi.string().pattern(new RegExp('^[a-zA-Z0-9]{3,30}$')).required()
+      password: joi.string().regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/, 
+      'password').required().min(3).max(30)
     });
 
     const validation = userSchema.validate({email, password}, { abortEarly: false });
