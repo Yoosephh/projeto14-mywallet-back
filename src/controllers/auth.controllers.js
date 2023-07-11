@@ -63,9 +63,10 @@ export async function signin(req,res) {
 
     if(user && bcrypt.compareSync(password, user.password)){
       const token = uuid();
+      res.locals.userId = user._id
 
-      await userSessions.findOneAndDelete({userId:user._id});
-      await userSessions.insertOne({userId: user._id,token});
+      await userSessions.findOneAndDelete({userId});
+      await userSessions.insertOne({userId, token});
         res.status(200).send({name:user.name, token});
     }
 
